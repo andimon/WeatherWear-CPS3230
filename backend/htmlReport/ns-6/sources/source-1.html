@@ -1,0 +1,181 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > RecommendClothing</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.weatherwear.clothesrecommender</a>
+</div>
+
+<h1>Coverage Summary for Class: RecommendClothing (org.weatherwear.clothesrecommender)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RecommendClothing</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (25/25)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">RecommendClothing$MockitoMock$161036501</td>
+  </tr>
+  <tr>
+    <td class="name">RecommendClothing$MockitoMock$161036501$auxiliary$0JA96zFJ</td>
+  </tr>
+  <tr>
+    <td class="name">RecommendClothing$MockitoMock$161036501$auxiliary$5nw6Y6hw</td>
+  </tr>
+  <tr>
+    <td class="name">RecommendClothing$MockitoMock$161036501$auxiliary$k3G5O79p</td>
+  </tr>
+  <tr>
+    <td class="name">RecommendClothing$MockitoMock$161036501$auxiliary$tDC2DCWN</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (25/25)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.weatherwear.clothesrecommender;
+&nbsp;
+&nbsp;import org.weatherwear.utilities.Validation;
+&nbsp;import org.weatherwear.weatherdecider.IWeatherDecider;
+&nbsp;import org.weatherwear.weatherdecider.WeatherPossibility;
+&nbsp;
+&nbsp;import java.time.Clock;
+&nbsp;import java.time.DateTimeException;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.time.format.DateTimeFormatter;
+&nbsp;
+&nbsp;public class RecommendClothing implements IRecommendClothing {
+&nbsp;    private final IWeatherDecider IWeatherDecider;
+&nbsp;    private final Clock clock;
+<b class="fc">&nbsp;    public RecommendClothing(IWeatherDecider IWeatherDecider, Clock clock){</b>
+<b class="fc">&nbsp;        this.IWeatherDecider = IWeatherDecider;</b>
+<b class="fc">&nbsp;        this.clock=clock;</b>
+&nbsp;    }
+<b class="fc">&nbsp;    public RecommendClothing(IWeatherDecider IWeatherDecider){</b>
+<b class="fc">&nbsp;        this.IWeatherDecider = IWeatherDecider;</b>
+<b class="fc">&nbsp;        this.clock = Clock.systemDefaultZone();</b>
+&nbsp;    }
+&nbsp;    private String message(boolean isCold, boolean isRaining){
+<b class="fc">&nbsp;        String coldOrWarm = (isCold) ? &quot;cold&quot; : &quot;warm&quot;;</b>
+<b class="fc">&nbsp;        String warmOrLight = (isCold) ? &quot;warm&quot; : &quot;light&quot;;</b>
+<b class="fc">&nbsp;        String notOrCurrently = (isRaining) ? &quot;currently&quot; : &quot;not&quot;;</b>
+<b class="fc">&nbsp;        String doOrDont = (isRaining) ? &quot;do&quot; : &quot;don&#39;t&quot;;</b>
+<b class="fc">&nbsp;        return &quot;It is &quot;+coldOrWarm+&quot; so you should wear &quot;+warmOrLight+&quot; clothing.\n&quot;+&quot;It is &quot;+notOrCurrently+&quot; raining so you &quot;+doOrDont+&quot; need an umbrella.&quot;;</b>
+&nbsp;    }
+&nbsp;    private int getNumberOfDaysFromToday(String date) {
+<b class="fc">&nbsp;        Validation validation = new Validation();</b>
+<b class="fc">&nbsp;        String today = LocalDate.now(clock).format(DateTimeFormatter.ISO_LOCAL_DATE);</b>
+<b class="fc">&nbsp;        long days = validation.dayDifference(today,date);</b>
+<b class="fc">&nbsp;        if(days&lt;0 || days&gt;10)</b>
+<b class="fc">&nbsp;            throw new DateTimeException(&quot;Expected date to be between 0 and 10 days&quot;);</b>
+<b class="fc">&nbsp;        return (int) days;</b>
+&nbsp;    }
+&nbsp;    private void validateIATA(String IATA){
+<b class="fc">&nbsp;        Validation validation = new Validation();</b>
+<b class="fc">&nbsp;        if(!validation.isIATAValid(IATA)){</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;IATA is invalid&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    @Override
+&nbsp;    public String recommendClothing() throws Exception {
+<b class="fc">&nbsp;       WeatherPossibility weather = IWeatherDecider.decideWeather();</b>
+<b class="fc">&nbsp;       return message(weather.isCold(), weather.isRaining());</b>
+&nbsp;    }
+&nbsp;    @Override
+&nbsp;    public String recommendClothing(String IATA, String date) throws Exception {
+<b class="fc">&nbsp;        validateIATA(IATA);</b>
+<b class="fc">&nbsp;        WeatherPossibility weather = IWeatherDecider.decideWeather(IATA,getNumberOfDaysFromToday(date));</b>
+<b class="fc">&nbsp;        return message(weather.isCold(), weather.isRaining());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-08 14:21</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,174 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > LocationClient</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.weatherwear.clients.LocationClient</a>
+</div>
+
+<h1>Coverage Summary for Class: LocationClient (org.weatherwear.clients.LocationClient)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LocationClient</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (26/26)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.weatherwear.clients.LocationClient;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.core.JsonParseException;
+&nbsp;import com.fasterxml.jackson.core.JsonProcessingException;
+&nbsp;import com.fasterxml.jackson.databind.JsonNode;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import io.github.cdimascio.dotenv.Dotenv;
+&nbsp;import jakarta.ws.rs.core.MultivaluedHashMap;
+&nbsp;import jakarta.ws.rs.core.MultivaluedMap;
+&nbsp;import org.weatherwear.clients.GenericRestClient.*;
+&nbsp;import org.weatherwear.clients.Models.Location;
+&nbsp;
+&nbsp;import java.net.SocketTimeoutException;
+&nbsp;
+&nbsp;public class LocationClient implements ILocationClient {
+<b class="fc">&nbsp;    private  final Dotenv dotenv = Dotenv.load();</b>
+&nbsp;
+&nbsp;
+&nbsp;    private MultivaluedMap&lt;String, Object&gt; getHeaders() {
+<b class="fc">&nbsp;        MultivaluedMap&lt;String, Object&gt; headers = new MultivaluedHashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        headers.add(&quot;X-RapidAPI-Key&quot;, dotenv.get(&quot;X-RapidAPI-Key&quot;));</b>
+<b class="fc">&nbsp;        headers.add(&quot;X-RapidAPI-Host&quot;, &quot;airport-info.p.rapidapi.com&quot;);</b>
+<b class="fc">&nbsp;        return headers;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private MultivaluedMap&lt;String, Object&gt; getQueryParam(String iata) {
+<b class="fc">&nbsp;        MultivaluedMap&lt;String, Object&gt; queryParam = new MultivaluedHashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        queryParam.add(&quot;iata&quot;, iata);</b>
+<b class="fc">&nbsp;        return queryParam;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private final IRestClient restClientInterface;
+&nbsp;
+<b class="fc">&nbsp;    public LocationClient(IRestClient restClientInterface) {</b>
+<b class="fc">&nbsp;        this.restClientInterface = restClientInterface;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Location getLocation() throws JsonProcessingException, SocketTimeoutException {
+&nbsp;        try {
+<b class="fc">&nbsp;            HttpResponse response = restClientInterface.request(HttpRequestMethods.GET, &quot;http://ip-api.com&quot;, &quot;/json&quot;);</b>
+<b class="fc">&nbsp;            JsonNode node = new ObjectMapper().readTree(response.getResponseBody());</b>
+<b class="fc">&nbsp;            return new Location(node.get(&quot;lat&quot;).asText(), node.get(&quot;lon&quot;).asText());</b>
+<b class="fc">&nbsp;        } catch (SocketTimeoutException | JsonParseException | NullPointerException e) {</b>
+<b class="fc">&nbsp;            return getLocationBackup();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public Location getLocation(String IATA) throws JsonProcessingException, SocketTimeoutException {
+&nbsp;        try {
+<b class="fc">&nbsp;            HttpResponse response = restClientInterface.request(HttpRequestMethods.GET, &quot;https://www.iatageo.com&quot;, &quot;/getLatLng/&quot; + IATA);</b>
+<b class="fc">&nbsp;            JsonNode node = new ObjectMapper().readTree(response.getResponseBody());</b>
+<b class="fc">&nbsp;            return new Location(node.get(&quot;latitude&quot;).asText(), node.get(&quot;longitude&quot;).asText());</b>
+<b class="fc">&nbsp;        } catch (SocketTimeoutException | JsonParseException | NullPointerException e) {</b>
+<b class="fc">&nbsp;            return getLocationBackup(IATA);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public Location getLocationBackup() throws JsonProcessingException, SocketTimeoutException {
+<b class="fc">&nbsp;        HttpResponse httpResponse = restClientInterface.request(HttpRequestMethods.GET, &quot;https://ipapi.co&quot;, &quot;/json&quot;);</b>
+<b class="fc">&nbsp;        JsonNode node = new ObjectMapper().readTree(httpResponse.getResponseBody());</b>
+<b class="fc">&nbsp;        return new Location(node.get(&quot;latitude&quot;).toString(), node.get(&quot;longitude&quot;).toString());</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public Location getLocationBackup(String IATA) throws JsonProcessingException, SocketTimeoutException {
+<b class="fc">&nbsp;        HttpResponse httpResponse = restClientInterface.request(HttpRequestMethods.GET, &quot;https://airport-info.p.rapidapi.com&quot;, &quot;/airport&quot;, getHeaders(), getQueryParam(IATA));</b>
+<b class="fc">&nbsp;        JsonNode node = new ObjectMapper().readTree(httpResponse.getResponseBody());</b>
+<b class="fc">&nbsp;        return new Location(node.get(&quot;latitude&quot;).toString(), node.get(&quot;longitude&quot;).toString());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-08 14:21</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,88 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > IRestClient</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.weatherwear.clients.GenericRestClient</a>
+</div>
+
+<h1>Coverage Summary for Class: IRestClient (org.weatherwear.clients.GenericRestClient)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">IRestClient$MockitoMock$549728981</td>
+  </tr>
+  <tr>
+    <td class="name">IRestClient$MockitoMock$549728981$auxiliary$9kArBsCZ</td>
+  </tr>
+  <tr>
+    <td class="name">IRestClient$MockitoMock$549728981$auxiliary$kqv74xnN</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.weatherwear.clients.GenericRestClient;
+&nbsp;
+&nbsp;import jakarta.ws.rs.core.MultivaluedMap;
+&nbsp;
+&nbsp;import java.net.SocketTimeoutException;
+&nbsp;
+&nbsp;public interface IRestClient {
+&nbsp;    HttpResponse request(HttpRequestMethods verb, String target, String path) throws SocketTimeoutException;
+&nbsp;
+&nbsp;    HttpResponse request(HttpRequestMethods verb, String target, String path, MultivaluedMap&lt;String, Object&gt; headers, MultivaluedMap&lt;String, Object&gt; queryParams) throws SocketTimeoutException;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-08 14:21</div>
+</div>
+</body>
+</html>

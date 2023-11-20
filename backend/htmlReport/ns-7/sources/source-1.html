@@ -1,0 +1,185 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Menu</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.weatherwear.menu</a>
+</div>
+
+<h1>Coverage Summary for Class: Menu (org.weatherwear.menu)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Menu</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (35/35)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.weatherwear.menu;
+&nbsp;
+&nbsp;import org.weatherwear.clothesrecommender.IRecommendClothing;
+&nbsp;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.PrintStream;
+&nbsp;import java.util.Scanner;
+&nbsp;
+&nbsp;public class Menu {
+&nbsp;
+&nbsp;    private  final PrintStream printStream;
+&nbsp;    private final IRecommendClothing IRecommendClothing;
+&nbsp;
+&nbsp;    private final Scanner scanner;
+&nbsp;
+<b class="fc">&nbsp;    public Menu(InputStream inputStream, PrintStream printStream, IRecommendClothing IRecommendClothing) {</b>
+<b class="fc">&nbsp;        this.printStream = printStream;</b>
+<b class="fc">&nbsp;        scanner  = new Scanner(inputStream);</b>
+<b class="fc">&nbsp;        this.IRecommendClothing = IRecommendClothing;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void printMenu(String[] options) {
+<b class="fc">&nbsp;        printStream.println(&quot;WeatherWear.com&quot;);</b>
+<b class="fc">&nbsp;        printStream.println(&quot;____________________________________________________&quot;);</b>
+<b class="fc">&nbsp;        for (String option : options) {</b>
+<b class="fc">&nbsp;            printStream.println(option);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        printStream.print(&quot;Choose your option: &quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void start() {
+&nbsp;
+<b class="fc">&nbsp;        String[] options = {</b>
+&nbsp;                &quot;1- Recommend Clothing for current location&quot;,
+&nbsp;                &quot;2- Recommend clothing for future location&quot;,
+&nbsp;                &quot;3- Exit&quot;,
+&nbsp;        };
+&nbsp;
+<b class="fc">&nbsp;        int option = 1;</b>
+<b class="fc">&nbsp;        while (option != 3) {</b>
+<b class="fc">&nbsp;            printMenu(options);</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                option = scanner.nextInt();</b>
+<b class="fc">&nbsp;                switch (option) {</b>
+&nbsp;                    case 1:
+<b class="fc">&nbsp;                        option1();</b>
+<b class="fc">&nbsp;                        break;</b>
+&nbsp;                    case 2:
+<b class="fc">&nbsp;                        option2();</b>
+<b class="fc">&nbsp;                        break;</b>
+&nbsp;                    case 3:
+<b class="fc">&nbsp;                        printStream.println(&quot;Exiting WeatherWear.com&quot;);</b>
+<b class="fc">&nbsp;                        break;</b>
+&nbsp;                    default:
+<b class="fc">&nbsp;                        printStream.println(&quot;Option &quot; + option + &quot; is invalid. Please enter an integer value between 1 and &quot; + options.length);</b>
+&nbsp;                }
+<b class="fc">&nbsp;            } catch (Exception ex) {</b>
+<b class="fc">&nbsp;                String invalidOption = scanner.next();</b>
+<b class="fc">&nbsp;                printStream.println(&quot;Option &quot; + invalidOption + &quot; is invalid. Please enter an integer value between 1 and &quot; + options.length);</b>
+<b class="fc">&nbsp;            }</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void option1() throws Exception {
+<b class="fc">&nbsp;        printStream.println(IRecommendClothing.recommendClothing());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void option2() {
+&nbsp;        try {
+<b class="fc">&nbsp;            printStream.print(&quot;Enter 3 digit airport IATA (in uppercase format) : &quot;);</b>
+<b class="fc">&nbsp;            String IATA = scanner.next();</b>
+<b class="fc">&nbsp;            printStream.print(&quot;Enter day of arrival (in format YYYY-MM-DD): &quot;);</b>
+<b class="fc">&nbsp;            String futureDate = scanner.next();</b>
+<b class="fc">&nbsp;            printStream.println(IRecommendClothing.recommendClothing(IATA,futureDate));</b>
+&nbsp;        }
+<b class="fc">&nbsp;        catch (Exception e) {</b>
+<b class="fc">&nbsp;            printStream.println(&quot;Error - &quot;+e.getMessage());</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-08 14:21</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,162 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > WeatherClient</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.weatherwear.clients.WeatherClient</a>
+</div>
+
+<h1>Coverage Summary for Class: WeatherClient (org.weatherwear.clients.WeatherClient)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">WeatherClient</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.weatherwear.clients.WeatherClient;
+&nbsp;
+&nbsp;import org.weatherwear.clients.GenericRestClient.*;
+&nbsp;import org.weatherwear.clients.Models.Location;
+&nbsp;import com.fasterxml.jackson.core.JsonProcessingException;
+&nbsp;import com.fasterxml.jackson.databind.JsonNode;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import jakarta.ws.rs.core.MultivaluedHashMap;
+&nbsp;import jakarta.ws.rs.core.MultivaluedMap;
+&nbsp;import org.weatherwear.clients.Models.Weather;
+&nbsp;
+&nbsp;import java.net.SocketTimeoutException;
+&nbsp;
+&nbsp;public class WeatherClient implements IWeatherClient {
+&nbsp;    private final IRestClient restClientInterface;
+&nbsp;
+<b class="fc">&nbsp;    public WeatherClient(IRestClient restClientInterface) {</b>
+<b class="fc">&nbsp;        this.restClientInterface = restClientInterface;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private MultivaluedMap&lt;String, Object&gt; getHeaders() {
+<b class="fc">&nbsp;        MultivaluedMap&lt;String, Object&gt; headers = new MultivaluedHashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        headers.add(&quot;X-RapidAPI-Key&quot;, &quot;2308ce1676mshfab3c80999a0485p18cfbdjsn07cf833bf7d4&quot;);</b>
+<b class="fc">&nbsp;        headers.add(&quot;X-RapidAPI-Host&quot;, &quot;weatherapi-com.p.rapidapi.com&quot;);</b>
+<b class="fc">&nbsp;        return headers;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private MultivaluedMap&lt;String, Object&gt; getQueryParam(Location location, String days) {
+<b class="fc">&nbsp;        MultivaluedMap&lt;String, Object&gt; queryParam = new MultivaluedHashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        queryParam.add(&quot;latitude&quot;, location.getLatitude());</b>
+<b class="fc">&nbsp;        queryParam.add(&quot;longitude&quot;, location.getLongitude());</b>
+<b class="fc">&nbsp;        queryParam.add(&quot;daily&quot;, &quot;temperature_2m_max,precipitation_probability_max&quot;);</b>
+<b class="fc">&nbsp;        queryParam.add(&quot;timezone&quot;, &quot;auto&quot;);</b>
+<b class="fc">&nbsp;        queryParam.add(&quot;forecast_days&quot;, days);</b>
+<b class="fc">&nbsp;        return queryParam;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private Weather getWeatherFromService(Location location) throws JsonProcessingException, SocketTimeoutException {
+<b class="fc">&nbsp;        return getWeatherFromService(location, &quot;1&quot;, 0);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Weather getWeatherFromService(Location location, String days, int day) throws JsonProcessingException, SocketTimeoutException {
+<b class="fc">&nbsp;        HttpResponse response = restClientInterface.request(HttpRequestMethods.GET, &quot;https://api.open-meteo.com/v1&quot;, &quot;/forecast&quot;, getHeaders(), getQueryParam(location, days));</b>
+<b class="fc">&nbsp;        final JsonNode node = new ObjectMapper().readTree(response.getResponseBody());</b>
+<b class="fc">&nbsp;        double tempInCelsius = node.get(&quot;daily&quot;).get(&quot;temperature_2m_max&quot;).get(day).asDouble();</b>
+<b class="fc">&nbsp;        double precipitationProbability = node.get(&quot;daily&quot;).get(&quot;precipitation_probability_max&quot;).get(day).asDouble();</b>
+<b class="fc">&nbsp;        return new Weather(tempInCelsius, precipitationProbability);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Weather getWeather(Location location) throws JsonProcessingException, SocketTimeoutException {
+<b class="fc">&nbsp;        return getWeatherFromService(location);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Weather getWeather(Location location, int day) throws JsonProcessingException, SocketTimeoutException {
+<b class="fc">&nbsp;        return getWeatherFromService(location, &quot;11&quot;, day);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-08 14:21</div>
+</div>
+</body>
+</html>
